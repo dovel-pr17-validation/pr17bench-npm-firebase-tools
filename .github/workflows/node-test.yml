@@ -165,7 +165,7 @@ jobs:
           cache-dependency-path: npm-shrinkwrap.json
 
       - name: Cache ESLint
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .eslintcache
           key: eslint-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/*.ts', '**/*.js') }}
@@ -235,7 +235,7 @@ jobs:
           install-dependencies: true
           install-chromedriver: true
       - name: Cache firebase emulators
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ${{ env.FIREBASE_EMULATORS_PATH }}
           key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('emulator-cache/**') }}
@@ -301,7 +301,7 @@ jobs:
           cache-dependency-path: npm-shrinkwrap.json
 
       - name: Cache firebase emulators
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ${{ env.FIREBASE_EMULATORS_PATH }}
           key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('emulator-cache/**') }}
