@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "firebase-tools": "latest"
+  },
+  "overrides": {
+    "tar": "^7.5.8",
+    "diff": "^4.0.4",
+    "hono": "^4.11.7",
+    "minimatch": "^10.2.3",
+    "uuid": "^11.1.1"
+  }
+}

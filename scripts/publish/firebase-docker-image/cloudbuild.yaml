@@ -1,0 +1,37 @@
+steps:
+  # Grab the latest version, store in workspace
+  - id: "Read New Version Number from npm"
+    name: "node"
+    entrypoint: "sh"
+    args:
+      [
+        "-c",
+        "npm view firebase-tools version > /workspace/version_number.txt && cat /workspace/version_number.txt",
+      ]
+  # Publish the Firebase docker image
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        if [ "${_REPO_NAME}" = "staging" ]; then
+          RANDOM_HASH=$(tr -dc 'a-f0-9' < /dev/urandom | head -c 16)
+          docker build \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:$(cat /workspace/version_number.txt) \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:latest \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:no-new-use-public-image-$${RANDOM_HASH} \
+            -f ./Dockerfile .
+        else
+          docker build \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:$(cat /workspace/version_number.txt) \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:latest \
+            -t us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase:public-image-$(cat /workspace/version_number.txt) \
+            -f ./Dockerfile .
+        fi
+
+images:
+  - "us-docker.pkg.dev/${_TARGET_PROJECT_ID}/${_REPO_NAME}/firebase"
+
+substitutions:
+  _REPO_NAME: us
+  _TARGET_PROJECT_ID: firebase-cli
